@@ -22,11 +22,6 @@ server <- function(input, output, session) {
   right = -66.9513812 # east long
   bottom = 24.7433195
   
-  # circles<-D0%>%filter(med_dist>0)%>%filter(between(client_lat, bottom, top))%>%filter(between(serv_lat, bottom, top))%>%
-  #   filter(between(serv_lon, left, right))%>%filter(between(client_lon, left, right))%>%filter(tot_ip>50000)%>%
-  #   select(client_lat, client_lon, serv_lat, serv_lon)%>%distinct
-  # circles_plt<-bind_rows(circles[,c(1,2)],circles[,c(3,4)])%>%distinct()%>%select(lat=client_lat, lon=client_lon)
-  # circles_plt<-data.frame(circles_plt, ids = 1:nrow(circles_plt))
   
   gen_rand <- function(n) {
     a <- do.call(paste0, replicate(5, sample(LETTERS, n, TRUE), FALSE))
@@ -39,10 +34,6 @@ server <- function(input, output, session) {
                                                                         fillOpacity=.75, opacity=.75, weight=2, stroke=TRUE, layerId=id_labs, group = group_name)
   
   get_client_server_shapes<-function(uniq.client1, uniq.serv1,M.speed1,M.tot1, p1){
-    # lat.keep<-which(D1$client_lat==p1$lat)
-    # lon.keep<-which(D1$client_lon==p1$lng)
-    # keeps<-lon.keep[which(lon.keep%in%lat.keep)]
-    # Dn<-D1[keeps,]
     # 
     client_row_num<-uniq.client1%>%filter(client_lat==p1$lat)%>%filter(client_lon==p1$lng)
     uniq.serv1<-uniq.serv1%>%select(serv_lat, serv_lon)
@@ -54,14 +45,6 @@ server <- function(input, output, session) {
                           "client_lon"=rep(p1$lng, nrow(dest_servs)),  dest_servs)%>%distinct%>%na.omit
     
     
-    #Dn<-D%>%filter(client_lat==lat.match)%>%filter(client_lon==lon.match)
-    
-    # plotData1<-Dn%>%mutate(client_lat = as.numeric(as.character(client_lat)),
-    #                        serv_lat = as.numeric(as.character(serv_lat)),
-    #                        client_lon = as.numeric(as.character(client_lon)),
-    #                        serv_lon = as.numeric(as.character(serv_lon))) %>%
-    #   group_by(client_lat,client_lon,serv_lat,serv_lon) %>%
-    #   summarize(count=sum(tot_ip))
     
     L<-vector(mode="list", length=nrow(plotData1))
     
@@ -117,26 +100,7 @@ server <- function(input, output, session) {
       
     }
   })
-  # 
-  # observeEvent(input$Map_marker_click, { # update the location selectInput on map clicks
-  #   p <- input$Map_marker_click
-  #   if(!is.null(p$id)){
-  #     if(is.null(input$location) || input$location!=p$id) updateSelectInput(session, "location", selected=p$id)
-  #   }
-  # })
-  # 
-  # observeEvent(input$location, { # update the map markers and view on location selectInput changes
-  #   p <- input$Map_marker_click
-  #   p2 <- subset(circles_plt, ids==input$location)
-  #   proxy <- leafletProxy("Map")
-  #   if(nrow(p2)==0){
-  #     proxy %>% removeMarker(layerId="Selected")
-  #   } else if(length(p$id) && input$location!=p$id){
-  #     proxy %>% setView(lng=p2$lon, lat=p2$lat, input$Map_zoom) %>% acm_defaults(p2$lon, p2$lat)
-  #   } else if(!length(p$id)){
-  #     proxy %>% setView(lng=p2$lon, lat=p2$lat, input$Map_zoom) %>% acm_defaults(p2$lon, p2$lat)
-  #   }
-  # })
+  
   
 }
 
